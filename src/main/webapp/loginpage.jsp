@@ -29,7 +29,7 @@
                     if(message!=null)
                     {
                         %>
-                        <div class="alert alert-primary" role="alert">
+                        <div class="alert <%=message.getCssClass()%>" role="alert">
                             <%=message.getContent()%>
                         </div>
                     <% session.removeAttribute("msg");
