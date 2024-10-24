@@ -44,8 +44,8 @@
             <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Select Gender</label>
               <br>
-              <input type="radio" id="gender" name="gender" value="male"> Male
-              <input type="radio" id="gender" name="gender" value="female"> Female
+              <input type="radio" id="gender" name="gender" value="Male"> Male
+              <input type="radio" id="gender" name="gender" value="Female"> Female
             </div>
 
             <div class="mb-3">

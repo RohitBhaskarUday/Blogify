@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
                 //out.println("Invalid email or password try again.");
 
                 //we use the message Object to display over the screen.
-                Message msg = new Message("Invalid email or password try again.", "error", "alert-danger");
+                Message msg = new Message("Invalid email or password try again!", "error", "alert-danger");
                 //we will set the message within the httpsession itself.
                 HttpSession session = req.getSession();
                 session.setAttribute("msg", msg);

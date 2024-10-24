@@ -6,10 +6,11 @@ public class Message {
     private String type;
     private String cssClass;
 
-    public Message(String content, String cssClass, String type) {
+    public Message(String content, String type, String cssClass) {
         this.content = content;
-        this.cssClass = cssClass;
         this.type = type;
+        this.cssClass = cssClass;
+
     }
 
     public String getContent() {
