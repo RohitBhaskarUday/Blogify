@@ -1,13 +1,12 @@
 
 <%@page import="com.blog.entities.User" %>
+<%@ page import="com.blog.entities.Message" %>
 <%@page errorPage="errorpage.jsp" %>
+
 <%--if the user has did not loggedin--%>
-<%
-    User user = (User) session.getAttribute("currentUser");
+<%User user = (User) session.getAttribute("currentUser");
     if(user==null){
-
         response.sendRedirect("loginpage.jsp");
-
     }
 %>
 <html>
@@ -21,12 +20,10 @@
         .banner-background{
             clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 85%, 62% 100%, 28% 85%, 0 100%, 0 0); } </style>
 
-
-
 </head>
 <body>
-<%--   nav bar starts--%>
 
+<%--   nav bar starts--%>
 <nav class="navbar navbar-expand-lg navbar-dark primary-background">
     <a class="navbar-brand" href="index.jsp"><span class="fa fa-sticky-note"></span>  Blogify</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,12 +69,22 @@
     </div>
 </nav>
 <%--nav bar ends over here--%>
+<%
+    Message message = (Message) session.getAttribute("msg");
+    if(message!=null)
+    {
+%>
+<div class="alert <%=message.getCssClass()%>" role="alert">
+    <%=message.getContent()%>
+</div>
+<% session.removeAttribute("msg");
+} %>
 
 <%--start of the profile modal--%>
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileModal">
-    Launch demo modal
-</button>
+<%--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileModal">--%>
+<%--    Launch demo modal--%>
+<%--</button>--%>
 
 <!-- Modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -125,8 +132,8 @@
                     </div>
 <%--                    profile editing starts here--%>
                     <div id="profile-edit" style="display: none">
-                        <h5 class="mt">Proceed with your changes</h5>
-                        <form action="EditServlet" method="post">
+                        <h5 class="mt">Make your changes here</h5>
+                        <form action="EditServlet" method="post" enctype="multipart/form-data">
                             <table class="table">
                                 <tr>
                                     <td>I.D.</td>
@@ -147,9 +154,7 @@
                                 <tr>
                                     <td>About: </td>
                                     <td>
-                                        <textarea rows="3" class="form-control" name="user_about">
-                                            <%=user.getAbout()%>
-                                        </textarea>
+                                        <textarea rows="3" class="form-control" name="user_about"><%=user.getAbout()%></textarea>
                                     </td>
                                 </tr>
                                 <tr>
