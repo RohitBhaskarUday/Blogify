@@ -87,11 +87,35 @@
 <% session.removeAttribute("msg");
 } %>
 
-<%--start of the profile modal--%>
-<!-- Button trigger modal -->
-<%--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileModal">--%>
-<%--    Launch demo modal--%>
-<%--</button>--%>
+
+<%--main body of the profile page--%>
+<main>
+    <div class="container" >
+        <div class="row mt-4">
+            <%--first column--%>
+            <div class="col-md-4 " >
+            <%--categories--%>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        All Categories
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+                 </div>
+
+            </div>
+            <%--second column--%>
+            <div class="col-md-8">
+            <%--posts--%>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</main>
+
+<%-- end the main body of the profile page--%>
 
 <!-- Modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
