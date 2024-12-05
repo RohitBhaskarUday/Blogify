@@ -5,6 +5,7 @@ import com.blog.entities.Post;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PostDAO {
 
@@ -59,5 +60,68 @@ public class PostDAO {
 
 
         return flag;
+    }
+
+    public List<Post> getAllPost(){
+        List<Post> pList = new ArrayList<>();
+        //fetch all the posts from here
+        try{
+
+            PreparedStatement p = con.prepareStatement("select * from posts order by pid desc ");
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                int pid = rs.getInt("pid");
+                String pTitle = rs.getString("pTitle");
+                String pContent = rs.getString("pContent");
+                String pCode = rs.getString("pCode");
+                String pPicture = rs.getString("pPic");
+                Timestamp date = rs.getTimestamp("pDate");
+                int catId = rs.getInt("catId");
+                int userId = rs.getInt("userId");
+                Post post = new Post(pid, pTitle, pContent, pCode, pPicture, date, catId, userId);
+
+                //add all these elements to the list
+                pList.add(post);
+
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pList;
+    }
+
+    public List<Post> getPostByCatId(int catId){
+        List<Post> id = new ArrayList<>();
+
+        try{
+
+            PreparedStatement p = con.prepareStatement("select * from posts where catId=?");
+            p.setInt(1, catId);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                int pid = rs.getInt("pid");
+                String pTitle = rs.getString("pTitle");
+                String pContent = rs.getString("pContent");
+                String pCode = rs.getString("pCode");
+                String pPicture = rs.getString("pPic");
+                Timestamp date = rs.getTimestamp("pDate");
+                //int catId = rs.getInt("catId");
+                int userId = rs.getInt("userId");
+                Post post = new Post(pid, pTitle, pContent, pCode, pPicture, date, catId, userId);
+
+                //add all these elements to the list
+                id.add(post);
+
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return id;
+
     }
 }

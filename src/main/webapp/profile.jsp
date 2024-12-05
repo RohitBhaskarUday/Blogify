@@ -99,13 +99,34 @@
                     <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
                         All Categories
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+                    <%
+                        PostDAO catList = new PostDAO(ConnectionProvider.getConnection());
+                        ArrayList<Category> ls = catList.getCategories();
+
+                        for(Category cc: ls){
+
+                            %>
+                    <a href="#" class="list-group-item list-group-item-action"><%= cc.getName()%></a>
+
+                    <%
+
+                        }
+                    %>
                  </div>
 
             </div>
             <%--second column--%>
-            <div class="col-md-8">
+            <div class="col-md-8" >
             <%--posts--%>
+                <div class="container text-center" id="loader">
+                    <i class="fa fa-refresh fa-3x fa-spin"></i>
+                    <h3 class="mt-3">Loading...</h3>
+                </div>
+
+                <div class="container-fluid" id="post-container">
+
+
+                </div>
 
             </div>
 
@@ -353,6 +374,20 @@
 
 </script>
 
+<%--    loading post using ajax--%>
+    <script>
+        $(document).ready(function (e){
+            $.ajax({
+                url: "loadposts.jsp",
+                success: function (data, textStatus, jqXHR){
+                    console.log(data)
+                    $('#loader').hide()
+                    $('#post-container').html(data)
+                }
+            })
+
+        })
+    </script>
 
 
 </body>
