@@ -2,6 +2,7 @@ package com.blog.dao;
 
 import com.blog.entities.Category;
 import com.blog.entities.Post;
+import com.blog.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -124,4 +125,37 @@ public class PostDAO {
         return id;
 
     }
+
+    public  Post getPostByPostId(int postId){
+
+        Post post = null;
+        try{
+            String q = "select * from posts where pid=?";
+            PreparedStatement ps = this.con.prepareStatement(q);
+            ps.setInt(1, postId);
+            ResultSet result = ps.executeQuery();
+
+            if(result.next()){
+                post = new Post();
+                int pid = result.getInt("pid");
+                String pTitle = result.getString("pTitle");
+                String pContent = result.getString("pContent");
+                String pCode = result.getString("pCode");
+                String pPicture = result.getString("pPic");
+                Timestamp date = result.getTimestamp("pDate");
+                int cid = result.getInt("catId");
+                int userId = result.getInt("userId");
+                post = new Post(pid, pTitle, pContent, pCode, pPicture, date, cid, userId);
+
+            }
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return post;
+
+    }
+
 }

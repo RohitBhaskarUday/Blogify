@@ -5,3 +5,7 @@ body{
 .primary-background{
     background: #26c6da!important;
 }
+
+.post-title{
+    font-weight: 100;
+}

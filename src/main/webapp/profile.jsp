@@ -22,7 +22,13 @@
     <link href="css/style.css" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .banner-background{
-            clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 85%, 62% 100%, 28% 85%, 0 100%, 0 0); } </style>
+            clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 85%, 62% 100%, 28% 85%, 0 100%, 0 0); }
+        body{
+            background-size: cover;
+            background: url(images/bg.jpg);
+            background-attachment: fixed;
+        }
+    </style>
 
 </head>
 <body>
@@ -96,7 +102,7 @@
             <div class="col-md-4 " >
             <%--categories--%>
                 <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    <a href="#" onclick="getPosts(0, this)" class="c-link list-group-item list-group-item-action active" aria-current="true">
                         All Categories
                     </a>
                     <%
@@ -106,7 +112,7 @@
                         for(Category cc: ls){
 
                             %>
-                    <a href="#" class="list-group-item list-group-item-action"><%= cc.getName()%></a>
+                    <a href="#" onclick="getPosts(<%= cc.getCid() %>, this)" class=" c-link list-group-item list-group-item-action"><%= cc.getName()%></a>
 
                     <%
 
@@ -376,16 +382,30 @@
 
 <%--    loading post using ajax--%>
     <script>
-        $(document).ready(function (e){
+
+        function getPosts(catId, temp){
+            $("#loader").show();
+            $("#post-container").hide();
+
+            $(".c-link").removeClass('active')
+
+
             $.ajax({
                 url: "loadposts.jsp",
+                data: {cid: catId},
                 success: function (data, textStatus, jqXHR){
                     console.log(data)
                     $('#loader').hide()
+                    $('#post-container').show();
                     $('#post-container').html(data)
+                    $(temp).addClass('active')
                 }
             })
+        }
 
+        $(document).ready(function (e){
+            let allPostRef = $('.c-link')[0]
+            getPosts(0, allPostRef)
         })
     </script>
 
