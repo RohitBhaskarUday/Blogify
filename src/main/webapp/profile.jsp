@@ -281,8 +281,15 @@
                         <input name="pTitle" type="text" placeholder="Enter the title of your blog." class="form-control">
                     </div>
 
+<%--                    this is where the user writes the content--%>
                     <div class="form-group">
-                        <textarea name="pContent" class="form-control" style="height: 200px" placeholder="Enter the content over here.."></textarea>
+                        <textarea id="pContent" name="pContent" class="form-control" style="height: 200px" placeholder="Enter the content over here.."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-start" style="padding-bottom: 15px">
+                        <button type="button" id="enhance-content" class="btn btn-outline-primary mr-2">Enhance Content</button>
+                        <button type="button" id="grammar-checker" class="btn btn-outline-primary mr-2">Grammar-Check</button>
+                        <button type="button" id="generate-idea" class="btn btn-outline-primary">Give Ideas</button>
+
                     </div>
                     <div class="form-group">
                         <textarea name="pCode" class="form-control" style="height: 200px" placeholder="Enter any kind of code over here..if any"></textarea>
@@ -337,6 +344,63 @@
     });
 
 </script>
+
+<script>
+    //upon sending submit from enhance content we should be able to send the data to llm ?
+    $(document).ready(function () {
+        $('#enhance-content').on('click', function () {
+            //event.preventDefault();
+            const content = $('#pContent').val();
+
+            if (!content.trim()) {
+                alert("Please write something to correct or enhance!");
+                return;
+            }
+            //const content = $('#content-area').val(); // Get the content from the textarea
+            $.ajax({
+                url: "EnhanceContentServlet",
+                type: "POST",
+                data: { pContent: content },
+                success: function (response){
+                    const enhancedContent = JSON.parse(response); // Parse the LLM response
+                    if (enhancedContent.status !== "success") {
+                        swal("Error", "Could not enhance content. Please try again.", "error");
+                    } else {
+                        $('#pContent').val(enhancedContent.enhancedContent); // Update the textarea with enhanced content
+                        //swal("Enhanced!", "Your content has been enhanced.", "success");
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+
+    <script>
+        $(document).ready(function () {
+            $('#grammar-checker').on('click', function (){
+                const content = $('#pContent').val();
+                if (!content.trim()) {
+                    alert("Please write something to correct or enhance!");
+                    return;
+                }
+                $.ajax({
+                    url: "GrammarCheckServlet",
+                    type: "POST",
+                    data: { pContent: content },
+                    success: function (response){
+                        const enhancedContent = JSON.parse(response); // Parse the LLM response
+                        if (enhancedContent.status !== "success") {
+                            swal("Error", "Could not enhance content. Please try again.", "error");
+                        } else {
+                            $('#pContent').val(enhancedContent.enhancedContent); // Update the textarea with enhanced content
+                            //swal("Enhanced!", "Your content has been enhanced.", "success");
+                        }
+                    }
+                });
+            })
+        });
+    </script>
 
 <script>
 
