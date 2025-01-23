@@ -120,29 +120,6 @@ This project is a dynamic blogging application that allows users to create, enha
 3. **Frontend:**
    - The enhanced content is displayed in the field for the user to review and post.
 
-### Example AJAX Request
-```javascript
-$('#enhance-content').on('click', function () {
-    const content = $('#pContent').val();
-    if (!content.trim()) {
-        alert("Please enter some content to enhance!");
-        return;
-    }
-
-    $.ajax({
-        url: "EnhanceContentServlet",
-        type: "POST",
-        data: { pContent: content },
-        success: function (data) {
-            $('#pContent').val(data); // Display enhanced content
-        },
-        error: function () {
-            alert("Error enhancing content. Please try again.");
-        }
-    });
-});
-```
-
 ---
 
 ## Future Enhancements
