@@ -27,6 +27,13 @@
 
 %>
 
+<%--for image to be displayed--%>
+<%
+  String postPicture = p.getpPicture();
+  boolean hasImage = (postPicture != null && !postPicture.trim().isEmpty());
+%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,6 +53,7 @@
     .post-content{
       font-weight: 100;
       font-size: 25px;
+
     }
     .post-date{
       font-style: italic;
@@ -63,8 +71,17 @@
 
     body{
       background-size: cover;
-      background: url(images/bg.jpg);
-      background-attachment: fixed;
+      background: url(images/bg.jpg) fixed;
+    }
+    .card {
+      border-radius: 15px; /* Slightly rounded corners */
+    }
+    .card-header {
+      background: #343a40; /* Dark grey */
+      color: #fff;
+    }
+    .card-body {
+      background: #f8f9fa; /* Light grey to contrast with the header */
     }
 
 
@@ -130,36 +147,61 @@
 <div class="container">
   <div class="row my-4">
     <div class="col-md-8 offset-md-2">
-      <div class="card-header primary-background">
-        <h4 class="post-title"><%= p.getpTitle()%></h4>
-      </div>
-      <div class="card-body">
-        <img class="card-img-top my-2" src="blog-images/<%=p.getpPicture()%> ">
+      <div class="card my-4">
 
-        <div class="row my-3 row-user">
-          <div class="col-md-8">
+        <!-- Card Header -->
+        <div class="card-header primary-background text-white">
+          <h4 class="mb-0"><%= p.getpTitle() %></h4>
+        </div>
 
-            <p class="post-user-info"><a href="#"><%=name.getName()%></a> has posted : </p>
+        <!-- Card Body -->
+        <div class="card-body">
+          <% if (hasImage) { %>
+          <img class="card-img-top mb-3"
+               src="blog-images/<%= postPicture %>"
+               alt="Blog Image"
+               style="max-height: 400px; object-fit: cover;">
+          <% } %>
+
+          <div class="row my-3 row-user">
+            <div class="col-md-8">
+              <p class="post-user-info">
+                <a href="#"><%= name.getName() %></a> has posted:
+              </p>
+            </div>
+            <div class="col-md-4 text-right">
+              <p class="post-date">
+                <%= DateFormat.getDateTimeInstance().format(p.getpDate())%>
+              </p>
+            </div>
           </div>
-          <div class="col-md-4">
-            <p class="post-date"><%= DateFormat.getDateTimeInstance().format(p.getpDate())%></p>
+
+          <div class="post-content" style="white-space: pre-wrap; font-size: 1.1rem;">
+            <%= p.getpContent() %>
+          </div>
+
+          <!-- Code block -->
+          <div class="post-code my-3 p-3" style="background-color: #f8f9fa;">
+            <pre style="margin-bottom: 0;"><%= p.getpCode() %></pre>
           </div>
         </div>
 
-
-        <p class="post-content"><%=p.getpContent()%></p>
-        <br>
-        <br>
-        <div class="post-code">
-        <pre><%=p.getpCode()%></pre>
+        <!-- Card Footer -->
+        <div class="card-footer d-flex justify-content-around primary-background text-center">
+          <a href="#!" class="btn btn-outline-light btn-sm">
+            <i class="fa fa-thumbs-o-up"> <span>10</span></i>
+          </a>
+          <a href="showblogpage.jsp?post_id=<%=p.getpId()%>" class="btn btn-outline-light btn-sm">
+            Read More
+          </a>
+          <a href="#!" class="btn btn-outline-light btn-sm">
+            <i class="fa fa-commenting-o"> <span>20</span></i>
+          </a>
         </div>
-      </div>
-      <div class="card-footer primary-background text-center">
-        <a href="#!" class="btn btn-outline-light btn-sm"><i class="fa fa-thumbs-o-up"> <span>10 </span></i> </a>
-        <a href="showblogpage.jsp?post_id=<%=p.getpId()%>" class="btn btn-outline-light btn-sm">Read More</a>
-        <a href="#!" class="btn btn-outline-light btn-sm"><i class="fa fa-commenting-o"> <span>20 </span></i> </a>
+
       </div>
     </div>
+
   </div>
 
 </div>

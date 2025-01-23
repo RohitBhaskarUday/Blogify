@@ -8,8 +8,11 @@
 
 
 <%
-    Thread.sleep(500);
+
+
+
     PostDAO d = new PostDAO(ConnectionProvider.getConnection());
+
 
     int cid = Integer.parseInt(request.getParameter("cid"));
 
@@ -20,21 +23,47 @@
         posts = d.getPostByCatId(cid);
     }
 
-    if(posts.size()==0){
-        out.println("<h4 class='display-4' text-center>No Posts found in this selected category</h4>");
+    if(posts.isEmpty()){
+        out.println("<div class='display-4 text-md-center' text-center>No Posts found in this selected category</div>");
         return;
     }
 
     for (Post post : posts) {
+        String str = post.getpPicture();
+
+        boolean hasImage = (str != null && !str.trim().isEmpty());
         %>
 <%--creation of cards--%>
 <div class="col-md-6">
     <div class="card">
-        <img src="blog-images/<%=post.getpPicture()%>" class="card-img-top" alt="...">
-        <div class="card-body">
-            <b><%=post.getpTitle()%></b>
-<%--            <p><%=post.getpContent()%></p>--%>
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0"><%= post.getpTitle() %></h5>
         </div>
+        <div class="card-body">
+
+
+        <% if (hasImage) { %>
+        <img class="card-img-top mb-3"
+             src="blog-images/<%= str %>"
+             alt="Blog Image"
+             style="max-height: 400px; object-fit: cover;">
+        <% } %>
+
+            <p>
+                <%  String sample="";
+                    if(post.getpContent() != null && post.getpContent().length() > 50){
+                        sample = post.getpContent().substring(0,25);
+                }
+                %>
+                <%=sample%>
+            </p>
+
+
+
+        </div>
+
+
+
         <div  class="card-footer primary-background text-center">
             <a href="#!" class="btn btn-outline-light btn-sm"><i class="fa fa-thumbs-o-up"> <span>10 </span></i> </a>
             <a href="showblogpage.jsp?post_id=<%=post.getpId()%>" class="btn btn-outline-light btn-sm">Read More</a>

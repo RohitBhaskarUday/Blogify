@@ -28,6 +28,26 @@
             background: url(images/bg.jpg);
             background-attachment: fixed;
         }
+        .sticky-sidebar {
+             /* Safari support */
+            position: sticky;
+            top: 0; /* adjust this offset as needed (the height of your navbar) */
+        }
+        .card {
+            border-radius: 10px; /* Slightly rounded corners */
+        }
+        .card-header {
+            background: #343a40; /* Dark grey */
+            color: #fff;
+        }
+
+        .list-group-item:hover {
+            background-color: lightskyblue;
+            color: #000;
+            cursor: pointer;
+        }
+
+
     </style>
 
 </head>
@@ -97,32 +117,40 @@
 <%--main body of the profile page--%>
 <main>
     <div class="container" >
-        <div class="row mt-4">
+        <div class="row mt-4 ">
             <%--first column--%>
-            <div class="col-md-4 " >
-            <%--categories--%>
-                <div class="list-group">
-                    <a href="#" onclick="getPosts(0, this)" class="c-link list-group-item list-group-item-action active" aria-current="true">
-                        All Categories
-                    </a>
-                    <%
-                        PostDAO catList = new PostDAO(ConnectionProvider.getConnection());
-                        ArrayList<Category> ls = catList.getCategories();
-
-                        for(Category cc: ls){
-
+                <div class="col-md-3 sticky-sidebar">
+                    <div class="card mb-4">
+                        <div class="card-header text-white bg-primary">
+                            <strong>Categories</strong>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <a href="#" onclick="getPosts(0, this)" class="c-link list-group-item list-group-item-action active">
+                                All Categories
+                            </a>
+                            <%-- Loop through the categories --%>
+                            <%
+                                PostDAO catList = new PostDAO(ConnectionProvider.getConnection());
+                                ArrayList<Category> ls = catList.getCategories();
+                                for(Category cc: ls){
                             %>
-                    <a href="#" onclick="getPosts(<%= cc.getCid() %>, this)" class=" c-link list-group-item list-group-item-action"><%= cc.getName()%></a>
+                            <a href="#"
+                               onclick="getPosts(<%= cc.getCid() %>, this)"
+                               class="c-link list-group-item list-group-item-action">
+                                <%= cc.getName() %>
+                            </a>
+                            <%
+                                }
+                            %>
+                        </div>
+                        <div class="text-center"><button type="button" id="add-category" class="btn btn-center" data-toggle="modal" data-target="#addCategoryModal">
+                            <i class="fa fa-plus"></i> Add Category
+                        </button></div>
 
-                    <%
-
-                        }
-                    %>
-                 </div>
-
-            </div>
+                    </div>
+                </div>
             <%--second column--%>
-            <div class="col-md-8" >
+            <div class="col-md-9" >
             <%--posts--%>
                 <div class="container text-center" id="loader">
                     <i class="fa fa-refresh fa-3x fa-spin"></i>
@@ -141,6 +169,38 @@
 
     </div>
 </main>
+
+<%-- Add category model --%>
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCategoryLabel">Create New Category</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="add-category-form" action="AddCategoryServlet" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Category Name</label>
+            <input type="text" name="categoryName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Description (optional)</label>
+            <textarea name="categoryDesc" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <%-- end the main body of the profile page--%>
 
@@ -344,6 +404,58 @@
     });
 
 </script>
+
+    <script>
+
+        $(document).ready(function (){
+            //we will start with a listener
+            $("#add-category-form").on("submit",function(event){
+                //this code gets called when form is submitted
+                event.preventDefault(); // the form's normal behaviour would be stopped.
+                //i,e the synchronous process would be stopped.
+                console.log("You submitted the form")
+
+                //now we will extract the form data
+                let form = $(this).serialize();
+
+                //now we are requesting the server
+                $.ajax({
+                    url:"AddCategoryServlet",
+                    type: 'POST',
+                    data: form,
+                    success: function (response){
+                        if (response.trim() === "success") {
+                            // Close the modal and reset the form
+
+
+                            // Reset the form
+                            $("#add-category-form")[0].reset();
+
+                            $("#addCategoryModal").hide();
+
+
+                            // Display a success message
+                            swal("Great!", "Your category has been added!", "success");
+                            location.reload();
+
+                        } else {
+                            // Display an error message
+                            swal("Error", "Could not add the category. Please try again.", "error");
+                        }
+                    },
+                    error: function (){
+                        //error..
+                        swal("Error", "Please try again!", "error");
+                    },
+                });
+
+            });
+
+        });
+
+    </script>
+
+
 
 <script>
     //upon sending submit from enhance content we should be able to send the data to llm ?

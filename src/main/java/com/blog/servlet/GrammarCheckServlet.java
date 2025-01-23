@@ -12,13 +12,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@WebServlet("/EnhanceContentServlet")
-public class EnhanceContentServlet extends HttpServlet {
+
+@WebServlet("/GrammarCheckServlet")
+public class GrammarCheckServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=utf-8");
         try(PrintWriter out = resp.getWriter()){
-
             //fetch content from the UI
             String content = req.getParameter("pContent");
 
@@ -26,11 +27,11 @@ public class EnhanceContentServlet extends HttpServlet {
 
             //prepare the JSON payload for the LLM request
             String jsonPayload = String.format(
-                    "{\"prompt\": \" Enhance the following content by improving clarity and adding ideas into the content. Do not add personal opinions, disclaimers, or extra commentary. Only return the improved text and nothing else. Here is the original text: %s\", \"model\": \"llama3.2\"}",
+                    "{\"prompt\": \"Please rewrite the following text for clarity, grammar, and style, while preserving its meaning. Do not add personal opinions, disclaimers, or extra commentary. Only return the improved text and nothing else. Here is the original text:  %s\", \"model\": \"llama3.2\"}",
                     content.replace("\"", "\\\""));
             System.out.println(jsonPayload);
 
-          //Set up the HTTP connection to the ollama server
+            //Set up the HTTP connection to the ollama server
             URL url = new URL("http://localhost:11434/api/generate");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -103,11 +104,6 @@ public class EnhanceContentServlet extends HttpServlet {
 
             // Send the JSON response back to the frontend
             out.println(jsonResponse.toString());
-
-
         }
     }
-
-
-
 }
